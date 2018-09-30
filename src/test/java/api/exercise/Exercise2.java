@@ -3,6 +3,7 @@ package api.exercise;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.function.BinaryOperator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,7 +52,9 @@ class Exercise2 {
      * @see <a href="https://habr.com/company/epam_systems/blog/247805">Сканирование</a>
      */
     private static <T> T[] sequentialPrefix(T[] source, BinaryOperator<T> operator) {
-        throw new UnsupportedOperationException();
+        T[] result = Arrays.copyOf(source, source.length);
+        Arrays.parallelPrefix(result, operator);
+        return result;
     }
 
     @Test
@@ -60,7 +63,7 @@ class Exercise2 {
         assertThat(log2(2), is(1));
         assertThat(log2(3), is(1));
         assertThat(log2(4), is(2));
-        assertThat(log2(Integer.MAX_VALUE), is(3));
+        assertThat(log2(Integer.MAX_VALUE), is(30));
     }
 
     @Test
@@ -80,7 +83,10 @@ class Exercise2 {
      * @throws IllegalArgumentException Если {@code value <= 0}
      */
     private static int log2(int value) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+        if (value <= 0) throw new IllegalArgumentException();
+        int log = 0;
+        while ((value >>>= 1) > 0) log++;
+        return log;
     }
 
     @Test
@@ -111,6 +117,7 @@ class Exercise2 {
      * @throws IllegalArgumentException Если {@code base < 0} или {@code degree < 0}
      */
     private static int pow(int base, int degree) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+        if (base < 0 || degree < 0) throw new IllegalArgumentException();
+        return Double.valueOf(Math.pow(base, degree)).intValue();
     }
 }
