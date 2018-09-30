@@ -1,13 +1,14 @@
 package lambda.part1.exercise;
 
 import com.google.common.collect.FluentIterable;
+import com.google.common.base.Predicate;
+
 import lambda.data.Person;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -27,7 +28,7 @@ class Exercise1 {
                 if (o1 != null && o2 == null) return 1;
                 if (o1 == null) return -1;
 
-                return o1.getAge() - o2.getAge();
+                return Integer.compare(o1.getAge(), o2.getAge());
             }
         }
 
@@ -53,7 +54,7 @@ class Exercise1 {
                 if (o1 != null && o2 == null) return 1;
                 if (o1 == null) return -1;
 
-                return o1.getAge() - o2.getAge();
+                return Integer.compare(o1.getAge(), o2.getAge());
             }
         };
 
@@ -92,13 +93,13 @@ class Exercise1 {
         // TODO use FluentIterable
         Predicate<Person> personIs30yoPredicate = new Predicate<Person>() {
             @Override
-            public boolean test(Person person) {
+            public boolean apply(Person person) {
                 return person.getAge() == 30;
             }
         };
 
         Person person = FluentIterable.from(persons)
-                            .firstMatch(personIs30yoPredicate::test)
+                            .firstMatch(personIs30yoPredicate::apply)
                             .orNull();
 
         assertThat(person, is(new Person("Николай", "Зимов", 30)));
