@@ -19,7 +19,7 @@ class Exercise1 {
                              .limit(10)
                              .toArray(int[][]::new);
 
-        IntStream stream = StreamSupport.intStream(new FairRectangleSpliterator(data), false);
+        IntStream stream = StreamSupport.intStream(FairRectangleSpliterator.of(data), false);
 
         assertThat(stream.sum(), is(50));
     }
@@ -33,7 +33,7 @@ class Exercise1 {
                              .toArray(int[][]::new);
         data[0][0] = 0;
 
-        IntStream stream = StreamSupport.intStream(new FairRectangleSpliterator(data), false);
+        IntStream stream = StreamSupport.intStream(FairRectangleSpliterator.of(data), false);
 
         assertThat(stream.min().orElseThrow(IllegalStateException::new), is(0));
     }
@@ -47,7 +47,7 @@ class Exercise1 {
                              .toArray(int[][]::new);
         data[3][3] = 50;
 
-        IntStream stream = StreamSupport.intStream(new FairRectangleSpliterator(data), true);
+        IntStream stream = StreamSupport.intStream(FairRectangleSpliterator.of(data), true);
 
         assertThat(stream.max().orElseThrow(IllegalStateException::new), is(50));
     }
