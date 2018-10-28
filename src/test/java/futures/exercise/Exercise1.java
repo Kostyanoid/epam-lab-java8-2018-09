@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.lineSeparator;
@@ -27,8 +30,20 @@ class Exercise1 {
             Employee result = null;
 
             // TODO использовать Executors.newFixedThreadPool(4), Future<T> и метод getEmployee: Person -> Employee
+            ExecutorService executor = Executors.newFixedThreadPool(4);
 
-            return result;
+            Future<Employee> employeeFuture = executor.submit(() -> {
+                String personFullName[] = getPersonNameAndSurnameFromUser().split(" ");
+                if (personFullName == null || personFullName.length < 2) return null;
+
+                return getEmployee(getPerson(personFullName[0], personFullName[1]));
+            });
+
+            while (!employeeFuture.isDone()) {
+                TimeUnit.SECONDS.sleep(1);
+            }
+
+            return employeeFuture.get();
         });
     }
 
@@ -39,7 +54,16 @@ class Exercise1 {
 
             // TODO использовать CompletableFuture<T> и метод getEmployeeInFuture: Person -> CompletableFuture<Employee>
 
-            return result;
+            String personFullName[] = getPersonNameAndSurnameFromUser().split(" ");
+            if (personFullName == null || personFullName.length < 2) return null;
+
+            CompletableFuture<Employee> employeeCompletableFuture
+                    = CompletableFuture.supplyAsync(() -> getPerson(personFullName[0], personFullName[1]))
+                    .thenApplyAsync(Exercise1::getEmployee);
+
+            employeeCompletableFuture.join();
+
+            return employeeCompletableFuture.get();
         });
     }
 
@@ -73,7 +97,7 @@ class Exercise1 {
         Person person;
         // For example load from another service
         TimeUnit.SECONDS.sleep(2);
-        return person = new Person(name, surname, 25);
+        return person = new Person(name, surname, 24);
     }
 
     // TODO использовать в vanillaFutureExample
